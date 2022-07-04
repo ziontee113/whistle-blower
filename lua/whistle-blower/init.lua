@@ -5,6 +5,7 @@ local api = vim.api
 local utils_extmarks = require("whistle-blower.utils.extmarks")
 local utils_viewport = require("whistle-blower.utils.viewport")
 local utils_buf_set_text = require("whistle-blower.utils.buf_set_text")
+local utils_syntax_format_test = require("whistle-blower.utils.syntax-format-test")
 
 -- keymaps for testing
 vim.keymap.set("n", "<F24><F24>h", function()
@@ -12,6 +13,9 @@ vim.keymap.set("n", "<F24><F24>h", function()
 end, { noremap = true, silent = true })
 vim.keymap.set("n", "<F24><F24>j", function()
 	utils_buf_set_text.set_text_test()
+end, { noremap = true, silent = true })
+vim.keymap.set("n", "<F24><F24>k", function()
+	utils_syntax_format_test.syntax_format_test()
 end, { noremap = true, silent = true })
 
 return M
