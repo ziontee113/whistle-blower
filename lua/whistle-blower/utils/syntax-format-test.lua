@@ -23,7 +23,8 @@ local function string_splitter(str)
 end
 
 M.syntax_format_test = function()
-	api.nvim_buf_set_lines(0, 1, 1, false, string_splitter(if_statement))
+	local curline = api.nvim_win_get_cursor(0)[1] - 1
+	api.nvim_buf_set_lines(0, curline, curline, false, string_splitter(if_statement))
 end
 
 return M
