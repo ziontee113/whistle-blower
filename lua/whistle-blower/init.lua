@@ -9,14 +9,15 @@ local utils_syntax_format_test = require("whistle-blower.utils.syntax-format-tes
 local utils_super_idol = require("whistle-blower.utils.super-idol")
 
 -- keymaps for testing
-vim.keymap.set("n", "<F24><F24>h", function()
-	utils_extmarks.test_extmark()
-end, { noremap = true, silent = true })
-vim.keymap.set("n", "<F24><F24>j", function()
-	utils_buf_set_text.set_text_test()
-end, { noremap = true, silent = true })
-vim.keymap.set("n", "<F24><F24>k", function()
-	utils_syntax_format_test.syntax_format_test()
-end, { noremap = true, silent = true })
+
+-- vim.keymap.set("n", "<F24><F24>h", function()
+-- 	utils_extmarks.test_extmark()
+-- end, { noremap = true, silent = true })
+-- vim.keymap.set("n", "<F24><F24>j", function()
+-- 	utils_buf_set_text.set_text_test()
+-- end, { noremap = true, silent = true })
+-- vim.keymap.set("n", "<F24><F24>k", function()
+-- 	utils_syntax_format_test.syntax_format_test()
+-- end, { noremap = true, silent = true })
 
 return M
