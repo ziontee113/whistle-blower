@@ -6,6 +6,7 @@ local utils_extmarks = require("whistle-blower.utils.extmarks")
 local utils_viewport = require("whistle-blower.utils.viewport")
 local utils_buf_set_text = require("whistle-blower.utils.buf_set_text")
 local utils_syntax_format_test = require("whistle-blower.utils.syntax-format-test")
+local utils_super_idol = require("whistle-blower.utils.super-idol")
 
 -- keymaps for testing
 vim.keymap.set("n", "<F24><F24>h", function()
