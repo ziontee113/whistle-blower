@@ -1,3 +1,5 @@
+local api = vim.api
+
 -- kemap shorthands
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
@@ -43,18 +45,15 @@ local test_hydra = Hydra({
 		{
 			"d",
 			function()
-				vim.cmd("norm! o")
+				local curline = api.nvim_win_get_cursor(0)[1]
+				api.nvim_buf_set_lines(0, curline - 1, curline - 1, false, { "", "" })
 
-				local key = vim.api.nvim_replace_termcodes("o", true, true, true)
-				vim.api.nvim_feedkeys(key, "n", false)
+				api.nvim_win_set_cursor(0, { curline, 0 })
 
+				expand(snippets["for_loop"])
 				vim.schedule(function()
-					expand(snippets["for_loop"])
-
-					vim.schedule(function()
-						key = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
-						vim.api.nvim_feedkeys(key, "i", false)
-					end)
+					local key = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+					vim.api.nvim_feedkeys(key, "i", false)
 				end)
 			end,
 			{ nowait = true },
