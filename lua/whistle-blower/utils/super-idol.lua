@@ -11,7 +11,7 @@ local ls = require("luasnip")
 local expand = ls.snip_expand
 
 -- require hydra-snippets
-local snippets = require("lua.whistle-blower.hydra-snippets.all")
+local snippets = require("whistle-blower.hydra-snippets.all")
 
 -- test Hydra with LuaSnip
 local test_hydra = Hydra({
