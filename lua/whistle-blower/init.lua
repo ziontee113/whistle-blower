@@ -7,6 +7,7 @@ local utils_viewport = require("whistle-blower.utils.viewport")
 local utils_buf_set_text = require("whistle-blower.utils.buf_set_text")
 local utils_syntax_format_test = require("whistle-blower.utils.syntax-format-test")
 local utils_super_idol = require("whistle-blower.utils.super-idol")
+local utils_field_testing = require("whistle-blower.utils.field-testing")
 
 -- keymaps for testing
 

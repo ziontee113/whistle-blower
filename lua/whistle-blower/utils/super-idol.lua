@@ -46,9 +46,13 @@ local test_hydra = Hydra({
 			"d",
 			function()
 				local curline = api.nvim_win_get_cursor(0)[1]
-				api.nvim_buf_set_lines(0, curline - 1, curline - 1, false, { "", "" })
 
-				api.nvim_win_set_cursor(0, { curline, 0 })
+				---> get parent node indent
+
+				api.nvim_buf_set_lines(0, curline - 1, curline - 1, false, { string.rep(" ", 12), "" })
+
+				--> Find a way to get the correct indent
+				api.nvim_win_set_cursor(0, { curline, 8 })
 
 				expand(snippets["for_loop"])
 				vim.schedule(function()
