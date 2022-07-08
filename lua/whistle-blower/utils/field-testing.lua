@@ -82,9 +82,7 @@ end --}}}
 
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
-	local ranges = get_fields_ranges(field_name)
-
-	for _, range in ipairs(ranges) do
+	for _, range in ipairs(get_fields(field_name)) do
 		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
 	end
 end --}}}
