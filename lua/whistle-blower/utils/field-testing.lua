@@ -1,6 +1,7 @@
 ---@diagnostic disable: missing-parameter, undefined-global
 local M = {}
 local api = vim.api
+local fn = vim.fn
 
 local ns = api.nvim_create_namespace("Field Marking")
 
@@ -97,7 +98,7 @@ local function filter_in_viewport(ranges) --{{{
 	local filtered_results = {}
 
 	for _, range in ipairs(ranges) do
-		if top < ranges[1] and bottom > range[1] then
+		if top < range[1] and bottom > range[1] then
 			table.insert(filtered_results, range)
 		end
 	end
