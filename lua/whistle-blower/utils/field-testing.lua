@@ -105,6 +105,17 @@ local function filter_in_viewport(ranges) --{{{
 
 	return filtered_results
 end --}}}
+local function filter_closed_folds(ranges)
+	local filtered_results = {}
+
+	for _, range in ipairs(ranges) do
+		if fn.foldclosed(range[1]) == -1 then
+			table.insert(filtered_results, range)
+		end
+	end
+
+	return filtered_results
+end
 
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
@@ -119,6 +130,7 @@ local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
 	local ranges = get_fields_ranges(field_name)
 
 	ranges = filter_in_viewport(ranges)
+	ranges = filter_closed_folds(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
