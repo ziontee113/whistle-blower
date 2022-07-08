@@ -1,4 +1,4 @@
----@diagnostic disable: missing-parameter, undefined-global, undefined-doc-name
+---@diagnostic disable: missing-parameter, undefined-global
 local M = {}
 local api = vim.api
 
@@ -68,13 +68,23 @@ local function get_fields(field_name) --{{{
 
 	return fields
 end --}}}
-
--- highlight functions
-local function highlight_all_fields(field_name) --{{{
+local function get_fields_ranges(field_name) --{{{
 	local fields = get_fields(field_name)
+	local ranges = {}
 
 	for _, node in ipairs(fields) do
 		local range = get_range_of_node(node)
+		table.insert(ranges, range)
+	end
+
+	return ranges
+end --}}}
+
+-- highlight functions
+local function highlight_all_fields(field_name) --{{{
+	local ranges = get_fields_ranges(field_name)
+
+	for _, range in ipairs(ranges) do
 		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
 	end
 end --}}}
