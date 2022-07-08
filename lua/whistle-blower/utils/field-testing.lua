@@ -135,10 +135,19 @@ local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
 
-		for i, range in ipairs(ranges) do
-			if jump_next and range[1] + 1 > cur_line or jump_next == false and range[1] + 1 < cur_line then
-				target_index = i
-				break
+		if jump_next then
+			for i, range in ipairs(ranges) do
+				if range[1] + 1 > cur_line then
+					target_index = i
+					break
+				end
+			end
+		else
+			for i = #ranges, 1, -1 do
+				if ranges[i][1] + 1 < cur_line then
+					target_index = i
+					break
+				end
 			end
 		end
 
