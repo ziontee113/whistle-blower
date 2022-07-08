@@ -9,6 +9,8 @@ local utils_syntax_format_test = require("whistle-blower.utils.syntax-format-tes
 local utils_super_idol = require("whistle-blower.utils.super-idol")
 local utils_field_testing = require("whistle-blower.utils.field-testing")
 
+local experiments_in_screen_jumping = require("whistle-blower.experiments.jump-in-screen")
+
 -- keymaps for testing
 
 -- vim.keymap.set("n", "<F24><F24>h", function()
