@@ -46,18 +46,20 @@ local function get_fields(field_name) --{{{
 	local fields = {}
 
 	for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
-		local node = value:parent():field(field_name)
+		local nodes = value:parent():field(field_name)
 
-		if #node > 0 then
-			local continue = true
-			for _, field in ipairs(fields) do
-				if field == node[1] then
-					continue = false
+		if #nodes > 0 then
+			for _, node in ipairs(nodes) do
+				local continue = true
+				for _, field in ipairs(fields) do
+					if field == node then
+						continue = false
+					end
 				end
-			end
 
-			if continue then
-				table.insert(fields, node[1])
+				if continue then
+					table.insert(fields, node)
+				end
 			end
 		end
 	end
@@ -105,7 +107,7 @@ local function filter_in_viewport(ranges) --{{{
 
 	return filtered_results
 end --}}}
-local function filter_closed_folds(ranges)
+local function filter_closed_folds(ranges) --{{{
 	local filtered_results = {}
 
 	for _, range in ipairs(ranges) do
@@ -115,7 +117,7 @@ local function filter_closed_folds(ranges)
 	end
 
 	return filtered_results
-end
+end --}}}
 
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
@@ -161,14 +163,14 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	delete_all_local_marks()
 
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
-	highlight_all_fields("condition")
-	-- highlight_all_fields("local_declaration")
+	-- highlight_all_fields("condition")
+	highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	jump_to_prev_or_next_field("condition", true)
+	jump_to_prev_or_next_field("local_declaration", true)
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>h", function() --{{{
-	jump_to_prev_or_next_field("condition", false)
+	jump_to_prev_or_next_field("local_declaration", false)
 end, opts) --}}}
 
 --------------------------------------
