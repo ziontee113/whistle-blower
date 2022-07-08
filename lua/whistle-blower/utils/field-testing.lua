@@ -42,6 +42,19 @@ local function delete_all_local_marks() --{{{
 end --}}}
 
 -- field related functions
+local function sort_field_ranges(ranges) --{{{
+	local results = {}
+
+	for _, v in pairs(ranges) do
+		table.insert(results, v)
+	end
+
+	table.sort(results, function(a, b)
+		return a[1] < b[1]
+	end)
+
+	return results
+end --}}}
 local function get_fields(field_name) --{{{
 	local fields = {}
 
@@ -133,6 +146,7 @@ local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
 
 	ranges = filter_in_viewport(ranges)
 	ranges = filter_closed_folds(ranges)
+	ranges = sort_field_ranges(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
