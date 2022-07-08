@@ -81,14 +81,40 @@ local function highlight_all_fields(field_name) --{{{
 	end
 end --}}}
 
+-- jump functions
+local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
+	local cur_line = api.nvim_win_get_cursor(0)[1]
+	local ranges = get_fields_ranges(field_name)
+
+	if #ranges > 0 then
+		local target_index = jump_next and 1 or #ranges
+
+		for i, range in ipairs(ranges) do
+			if jump_next and range[1] + 1 > cur_line or jump_next == false and range[1] + 1 < cur_line then
+				target_index = i
+				break
+			end
+		end
+
+		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
+	end
+end --}}}
+
 -- temporaty keymaps
-vim.keymap.set("n", "<F24><F24>l", function() --{{{
+local opts = { noremap = true, silent = true }
+vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	delete_all_local_marks()
 
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
 	highlight_all_fields("condition")
 	-- highlight_all_fields("local_declaration")
-end, { noremap = true, silent = true }) --}}}
+end, opts) --}}}
+vim.keymap.set("n", "<F24><F24>l", function() --{{{
+	jump_to_prev_or_next_field("condition", true)
+end, opts) --}}}
+vim.keymap.set("n", "<F24><F24>h", function() --{{{
+	jump_to_prev_or_next_field("condition", false)
+end, opts) --}}}
 
 --------------------------------------
 
