@@ -1,6 +1,8 @@
----@diagnostic disable: missing-parameter, undefined-global
+---@diagnostic disable: missing-parameter, undefined-global, undefined-doc-name
 local M = {}
 local api = vim.api
+
+local ns = api.nvim_create_namespace("Field Marking")
 
 --------------------------------------
 
@@ -27,55 +29,63 @@ local function get_nodes_in_array() --{{{
 	return nodes
 end --}}}
 
+local function get_range_of_node(node) --{{{
+	local start_row, start_col, end_row, end_col = node:range()
+	local range = { start_row, start_col, end_row, end_col }
+
+	return range
+end --}}}
+
 -- marks related functions
-local function delete_all_local_marks()
+local function delete_all_local_marks() --{{{
 	for i = 97, 122 do -- from 'a' to 'z'
 		api.nvim_buf_del_mark(0, vim.fn.nr2char(i))
 	end
-end
+end --}}}
 
-local function mark_all_fields(field) --{{{
+-- field related functions
+local function get_fields(field_name) --{{{
 	local nodes = get_nodes_in_array()
 
-	local start_char_index = 97
-	local hash_table = {}
+	local fields = {}
 
-	delete_all_local_marks()
-
-	local last_field_match = { -1, -1, -1, -1 }
 	for _, value in ipairs(nodes) do -- loop through all nodes
-		local variable = value:parent():field(field)
+		local node = value:parent():field(field_name)
 
-		if #variable > 0 then
-			local start_row, start_col, end_row, end_col = variable[1]:range()
-			local range = { start_row, start_col, end_row, end_col }
-
-			for index, _ in ipairs(range) do
-				if range[index] ~= last_field_match[index] then
-					last_field_match = range
-
-					local continue = true
-					for _, hash_value in ipairs(hash_table) do
-						if hash_value[1] == range[1] and hash_value[2] == range[2] then
-							continue = false
-							break
-						end
-					end
-
-					if continue then
-						api.nvim_buf_set_mark(0, vim.fn.nr2char(start_char_index), range[1] + 1, range[2], {})
-						start_char_index = start_char_index + 1
-						table.insert(hash_table, { range[1], range[2] })
-					end
+		if #node > 0 then
+			local continue = true
+			for _, field in ipairs(fields) do
+				if field == node[1] then
+					continue = false
 				end
 			end
+
+			if continue then
+				table.insert(fields, node[1])
+			end
 		end
+	end
+
+	return fields
+end --}}}
+
+-- highlight functions
+local function highlight_all_fields(field_name) --{{{
+	local fields = get_fields(field_name)
+
+	for _, node in ipairs(fields) do
+		local range = get_range_of_node(node)
+		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
 	end
 end --}}}
 
 -- temporaty keymaps
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	mark_all_fields("condition")
+	delete_all_local_marks()
+
+	api.nvim_buf_clear_namespace(0, ns, 0, -1)
+	highlight_all_fields("condition")
+	-- highlight_all_fields("local_declaration")
 end, { noremap = true, silent = true }) --}}}
 
 --------------------------------------
