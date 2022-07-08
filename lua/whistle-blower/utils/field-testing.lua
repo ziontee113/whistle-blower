@@ -74,6 +74,37 @@ local function get_fields_ranges(field_name) --{{{
 	return ranges
 end --}}}
 
+-- viewport related functions
+local function get_viewport_lines_range() --{{{
+	local scrolloff = fn.eval("&l:scrolloff")
+	vim.cmd("noautocmd setlocal scrolloff=0")
+
+	local pos = fn.getpos(".")
+	vim.cmd("noautocmd keepjumps normal! H")
+
+	local top = fn.line(".")
+	vim.cmd("noautocmd keepjumps normal! L")
+
+	local bottom = fn.line(".")
+
+	fn.setpos(".", pos)
+	vim.cmd("noautocmd setlocal scrolloff=" .. scrolloff)
+
+	return top, bottom
+end --}}}
+local function filter_in_viewport(ranges) --{{{
+	local top, bottom = get_viewport_lines_range()
+	local filtered_results = {}
+
+	for _, range in ipairs(ranges) do
+		if top < ranges[1] and bottom > range[1] then
+			table.insert(filtered_results, range)
+		end
+	end
+
+	return filtered_results
+end --}}}
+
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
 	for _, range in ipairs(get_fields_ranges(field_name)) do
@@ -85,6 +116,8 @@ end --}}}
 local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 	local ranges = get_fields_ranges(field_name)
+
+	ranges = filter_in_viewport(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
