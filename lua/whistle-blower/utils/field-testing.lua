@@ -30,10 +30,7 @@ local function get_nodes_in_array() --{{{
 end --}}}
 
 local function get_range_of_node(node) --{{{
-	local start_row, start_col, end_row, end_col = node:range()
-	local range = { start_row, start_col, end_row, end_col }
-
-	return range
+	return table.pack(node:range())
 end --}}}
 
 -- marks related functions
@@ -79,7 +76,7 @@ end --}}}
 
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
-	for _, range in ipairs(get_fields(field_name)) do
+	for _, range in ipairs(get_fields_ranges(field_name)) do
 		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
 	end
 end --}}}
