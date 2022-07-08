@@ -45,11 +45,9 @@ end --}}}
 
 -- field related functions
 local function get_fields(field_name) --{{{
-	local nodes = get_nodes_in_array()
-
 	local fields = {}
 
-	for _, value in ipairs(nodes) do -- loop through all nodes
+	for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
 		local node = value:parent():field(field_name)
 
 		if #node > 0 then
