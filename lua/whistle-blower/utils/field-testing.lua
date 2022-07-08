@@ -69,10 +69,9 @@ local function get_fields(field_name) --{{{
 	return fields
 end --}}}
 local function get_fields_ranges(field_name) --{{{
-	local fields = get_fields(field_name)
 	local ranges = {}
 
-	for _, node in ipairs(fields) do
+	for _, node in ipairs(get_fields(field_name)) do
 		local range = get_range_of_node(node)
 		table.insert(ranges, range)
 	end
