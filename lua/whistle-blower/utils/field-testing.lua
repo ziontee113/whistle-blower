@@ -140,7 +140,7 @@ local function highlight_all_fields(field_name) --{{{
 end --}}}
 
 -- jump functions
-M.jump_to_prev_or_next_field = function(field_names, jump_next) --{{{
+M.jump_to_field = function(field_names, jump_next) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
 	if type(field_names) == "string" then
@@ -196,10 +196,10 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	M.jump_to_prev_or_next_field({ "condition" }, true)
+	M.jump_to_field({ "condition" }, true)
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>h", function() --{{{
-	M.jump_to_prev_or_next_field({ "condition" }, false)
+	M.jump_to_field({ "condition" }, false)
 end, opts) --}}}
 
 -- Hydra

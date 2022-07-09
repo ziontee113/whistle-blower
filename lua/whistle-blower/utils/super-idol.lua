@@ -28,26 +28,26 @@ local test_hydra = Hydra({
 		{
 			"O",
 			function()
-				field_testing.jump_to_prev_or_next_field("clause", false)
+				field_testing.jump_to_field("clause", false)
 			end,
 		},
 		{
 			"o",
 			function()
-				field_testing.jump_to_prev_or_next_field("clause", true)
+				field_testing.jump_to_field("clause", true)
 			end,
 		},
 
 		{
 			"I",
 			function()
-				field_testing.jump_to_prev_or_next_field("condition", false)
+				field_testing.jump_to_field("condition", false)
 			end,
 		},
 		{
 			"i",
 			function()
-				field_testing.jump_to_prev_or_next_field("condition", true)
+				field_testing.jump_to_field("condition", true)
 			end,
 		},
 		{
