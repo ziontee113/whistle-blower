@@ -26,6 +26,19 @@ local test_hydra = Hydra({
 	},
 	heads = { --{{{
 		{
+			"F",
+			function()
+				field_testing.jump_to_node("function_declaration", false)
+			end,
+		},
+		{
+			"f",
+			function()
+				field_testing.jump_to_node("function_declaration", true)
+			end,
+		},
+
+		{
 			"O",
 			function()
 				field_testing.jump_to_field("clause", false)

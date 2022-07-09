@@ -63,7 +63,7 @@ local function get_nodes_ranges(node_types) --{{{
 	local ranges = {}
 
 	for _, node in ipairs(get_nodes(node_types)) do
-		table.insert(ranges, node:range())
+		table.insert(ranges, table.pack(node:range()))
 	end
 
 	return ranges
@@ -168,6 +168,37 @@ local function highlight_all_fields(field_name) --{{{
 end --}}}
 
 -- jump functions
+M.jump_to_node = function(node_types, jump_next) --{{{
+	local cur_line = api.nvim_win_get_cursor(0)[1]
+
+	local ranges = get_nodes_ranges(node_types)
+
+	ranges = filter_in_viewport(ranges)
+	ranges = filter_closed_folds(ranges)
+	ranges = sort_ranges(ranges)
+
+	if #ranges > 0 then
+		local target_index = jump_next and 1 or #ranges
+
+		if jump_next then
+			for i, range in ipairs(ranges) do
+				if range[1] + 1 > cur_line then
+					target_index = i
+					break
+				end
+			end
+		else
+			for i = #ranges, 1, -1 do
+				if ranges[i][1] + 1 < cur_line then
+					target_index = i
+					break
+				end
+			end
+		end
+
+		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
+	end
+end --}}}
 M.jump_to_field = function(field_names, jump_next) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
