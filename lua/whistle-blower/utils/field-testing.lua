@@ -69,55 +69,6 @@ local function get_nodes_ranges(node_types) --{{{
 	return ranges
 end --}}}
 
--- field related functions
-local function get_fields(field_name) --{{{
-	local fields = {}
-
-	for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
-		local nodes = value:parent():field(field_name)
-
-		if #nodes > 0 then
-			for _, node in ipairs(nodes) do
-				local continue = true
-				for _, field in ipairs(fields) do
-					if field == node then
-						continue = false
-					end
-				end
-
-				if continue then
-					table.insert(fields, node)
-				end
-			end
-		end
-	end
-
-	return fields
-end --}}}
-local function get_fields_ranges(field_name) --{{{
-	local ranges = {}
-
-	for _, node in ipairs(get_fields(field_name)) do
-		local range = get_range_of_node(node)
-		table.insert(ranges, range)
-	end
-
-	return ranges
-end --}}}
-local function sort_ranges(ranges) --{{{
-	local results = {}
-
-	for _, v in pairs(ranges) do
-		table.insert(results, v)
-	end
-
-	table.sort(results, function(a, b)
-		return a[1] < b[1]
-	end)
-
-	return results
-end --}}}
-
 -- viewport related functions
 local function get_viewport_lines_range() --{{{
 	local scrolloff = fn.eval("&l:scrolloff")
@@ -164,6 +115,68 @@ local function filter_closed_folds(ranges, first_line_of_fold) --{{{
 	return filtered_results
 end --}}}
 
+-- field related functions
+local function get_fields(field_names) --{{{
+	local fields = {}
+
+	if type(field_names) == "string" then
+		field_names = { field_names }
+	end
+
+	for _, name in ipairs(field_names) do
+		for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
+			local nodes = value:parent():field(name)
+
+			if #nodes > 0 then
+				for _, node in ipairs(nodes) do
+					local continue = true
+					for _, field in ipairs(fields) do
+						if field == node then
+							continue = false
+						end
+					end
+
+					if continue then
+						table.insert(fields, node)
+					end
+				end
+			end
+		end
+	end
+
+	return fields
+end --}}}
+local function get_fields_ranges(field_name) --{{{
+	local ranges = {}
+
+	for _, node in ipairs(get_fields(field_name)) do
+		local range = get_range_of_node(node)
+		table.insert(ranges, range)
+	end
+
+	return ranges
+end --}}}
+local function sort_ranges(ranges) --{{{
+	local results = {}
+
+	for _, v in pairs(ranges) do
+		table.insert(results, v)
+	end
+
+	table.sort(results, function(a, b)
+		return a[1] < b[1]
+	end)
+
+	return results
+end --}}}
+local function range_processing(ranges) --{{{
+	ranges = filter_in_viewport(ranges)
+	ranges = filter_closed_folds(ranges)
+	ranges = sort_ranges(ranges)
+
+	return ranges
+end --}}}
+
 -- highlight functions
 local function highlight_all_fields(field_name) --{{{
 	for _, range in ipairs(get_fields_ranges(field_name)) do
@@ -182,9 +195,7 @@ M.jump_to_node = function(node_types, jump_next) --{{{
 
 	local ranges = get_nodes_ranges(node_types)
 
-	ranges = filter_in_viewport(ranges)
-	ranges = filter_closed_folds(ranges)
-	ranges = sort_ranges(ranges)
+	ranges = range_processing(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
@@ -211,21 +222,9 @@ end --}}}
 M.jump_to_field = function(field_names, jump_next) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
-	if type(field_names) == "string" then
-		field_names = { field_names }
-	end
+	local ranges = get_fields_ranges(field_names)
 
-	local ranges = {}
-	for _, field in ipairs(field_names) do
-		local current_ranges = get_fields_ranges(field)
-		for _, range in ipairs(current_ranges) do
-			table.insert(ranges, range)
-		end
-	end
-
-	ranges = filter_in_viewport(ranges)
-	ranges = filter_closed_folds(ranges)
-	ranges = sort_ranges(ranges)
+	ranges = range_processing(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
