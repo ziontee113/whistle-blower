@@ -152,6 +152,7 @@ local function filter_closed_folds(ranges) --{{{
 	local filtered_results = {}
 
 	for _, range in ipairs(ranges) do
+		-- if it's not a fold | if it's on the first line of the fold --> dangerous depends on the user
 		if fn.foldclosed(range[1] + 1) == -1 or fn.foldclosed(range[1] + 1) == range[1] + 1 then
 			table.insert(filtered_results, range)
 		end
