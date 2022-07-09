@@ -196,22 +196,26 @@ local function highlight_all_nodes(node_types) --{{{
 end --}}}
 
 -- jump functions
-M.jump_to_node_or_field = function(node_or_field, type_name, jump_next, opts) --{{{
+M.jump_to_node_or_field = function(opts) --{{{
+	if opts.kind == nil or opts.type == nil then
+		return
+	end
+
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
 	local ranges
-	if node_or_field == "node" then
-		ranges = get_nodes_ranges(type_name)
+	if opts.kind == "node" then
+		ranges = get_nodes_ranges(opts.type)
 	else
-		ranges = get_fields_ranges(type_name)
+		ranges = get_fields_ranges(opts.type)
 	end
 
-	ranges = range_processing(ranges, opts)
+	ranges = range_processing(ranges, opts.fold_filter or false)
 
 	if #ranges > 0 then
-		local target_index = jump_next and 1 or #ranges
+		local target_index = opts.next and 1 or #ranges
 
-		if jump_next then
+		if opts.next then
 			for i, range in ipairs(ranges) do
 				if range[1] + 1 > cur_line then
 					target_index = i
@@ -230,14 +234,8 @@ M.jump_to_node_or_field = function(node_or_field, type_name, jump_next, opts) --
 		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
 end --}}}
-M.jump_to_node = function(node_types, jump_next, opts) --{{{
-	M.jump_to_node_or_field("node", node_types, jump_next, opts)
-end --}}}
-M.jump_to_field = function(field_names, jump_next, opts) --{{{
-	M.jump_to_node_or_field("field", field_names, jump_next, opts)
-end --}}}
 
--- temporaty keymaps
+-- temporary keymaps
 local opts = { noremap = true, silent = true }
 vim.keymap.set("n", "<F24><F24>c", function() --{{{
 	delete_all_local_marks()
@@ -257,10 +255,17 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	M.jump_to_field({ "condition" }, true)
+	M.jump_to_node_or_field({
+		kind = "field",
+		type = "condition",
+		next = true,
+	})
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>h", function() --{{{
-	M.jump_to_field({ "condition" }, false)
+	M.jump_to_node_or_field({
+		kind = "field",
+		type = "condition",
+	})
 end, opts) --}}}
 
 --------------------------------------
