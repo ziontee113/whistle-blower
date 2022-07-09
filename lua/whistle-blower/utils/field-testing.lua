@@ -140,9 +140,20 @@ local function highlight_all_fields(field_name) --{{{
 end --}}}
 
 -- jump functions
-local function jump_to_prev_or_next_field(field_name, jump_next) --{{{
+local function jump_to_prev_or_next_field(field_names, jump_next) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
-	local ranges = get_fields_ranges(field_name)
+
+	if type(field_names) == "string" then
+		field_names = { field_names }
+	end
+
+	local ranges = {}
+	for _, field in ipairs(field_names) do
+		local current_ranges = get_fields_ranges(field)
+		for _, range in ipairs(current_ranges) do
+			table.insert(ranges, range)
+		end
+	end
 
 	ranges = filter_in_viewport(ranges)
 	ranges = filter_closed_folds(ranges)
@@ -173,6 +184,10 @@ end --}}}
 
 -- temporaty keymaps
 local opts = { noremap = true, silent = true }
+vim.keymap.set("n", "<F24><F24>c", function() --{{{
+	delete_all_local_marks()
+	api.nvim_buf_clear_namespace(0, ns, 0, -1)
+end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	delete_all_local_marks()
 
@@ -181,12 +196,14 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	jump_to_prev_or_next_field("local_declaration", true)
+	jump_to_prev_or_next_field({ "condition" }, true)
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>h", function() --{{{
-	jump_to_prev_or_next_field("local_declaration", false)
+	jump_to_prev_or_next_field({ "condition" }, false)
 end, opts) --}}}
 
 --------------------------------------
 
 return M
+
+-- vim: foldmethod=marker foldmarker={{{,}}} foldlevel=0
