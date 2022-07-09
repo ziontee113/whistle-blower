@@ -172,8 +172,8 @@ end --}}}
 local function range_processing(ranges, opts) --{{{
 	ranges = filter_in_viewport(ranges)
 
-	if opts then
-		ranges = filter_closed_folds(ranges, opts)
+	if opts and opts.fold_filter then
+		ranges = filter_closed_folds(ranges, opts.fold_filter)
 	else
 		ranges = filter_closed_folds(ranges)
 	end
@@ -206,7 +206,7 @@ M.jump_to_node_or_field = function(node_or_field, type_name, jump_next, opts) --
 		ranges = get_fields_ranges(type_name)
 	end
 
-	ranges = range_processing(ranges, opts.fold_filter)
+	ranges = range_processing(ranges, opts)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges

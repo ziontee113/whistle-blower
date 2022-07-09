@@ -28,21 +28,13 @@ local test_hydra = Hydra({
 		{
 			"F",
 			function()
-				field_testing.jump_to_node(
-					{ "function_declaration", "function_definition" },
-					false,
-					{ ["fold_filter"] = true }
-				)
+				field_testing.jump_to_node({ "function_declaration", "function_definition" }, false)
 			end,
 		},
 		{
 			"f",
 			function()
-				field_testing.jump_to_node(
-					{ "function_declaration", "function_definition" },
-					true,
-					{ ["fold_filter"] = true }
-				)
+				field_testing.jump_to_node({ "function_declaration", "function_definition" }, true)
 			end,
 		},
 
