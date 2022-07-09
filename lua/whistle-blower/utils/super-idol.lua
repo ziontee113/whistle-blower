@@ -23,6 +23,12 @@ local test_hydra = Hydra({
 	body = "<F99>xxx", -- testing non exist Hydra body
 	config = {
 		color = "pink",
+		on_enter = function()
+			vim.o.scrolloff = 0
+		end,
+		on_exit = function()
+			vim.o.scrolloff = 8
+		end,
 	},
 	heads = { --{{{
 		{
@@ -31,6 +37,7 @@ local test_hydra = Hydra({
 				field_testing.jump_to_node_or_field({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
+					jump_loop = true,
 				})
 			end,
 		},
@@ -41,6 +48,7 @@ local test_hydra = Hydra({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
 					next = true,
+					jump_loop = true,
 				})
 			end,
 		},
@@ -51,6 +59,7 @@ local test_hydra = Hydra({
 				field_testing.jump_to_node_or_field({
 					kind = "field",
 					type = { "clause" },
+					jump_loop = true,
 				})
 			end,
 		},
@@ -61,6 +70,7 @@ local test_hydra = Hydra({
 					kind = "field",
 					type = { "clause" },
 					next = true,
+					jump_loop = true,
 				})
 			end,
 		},
@@ -71,6 +81,7 @@ local test_hydra = Hydra({
 				field_testing.jump_to_node_or_field({
 					kind = "field",
 					type = { "condition" },
+					jump_loop = true,
 				})
 			end,
 		},
@@ -81,6 +92,7 @@ local test_hydra = Hydra({
 					kind = "field",
 					type = { "condition" },
 					next = true,
+					jump_loop = true,
 				})
 			end,
 		},

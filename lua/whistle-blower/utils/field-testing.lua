@@ -204,9 +204,7 @@ local function jump_ranges_handling(opts) --{{{
 		ranges = get_fields_ranges(opts.type)
 	end
 
-	ranges = range_processing(ranges, opts.fold_filter or false)
-
-	return ranges
+	return range_processing(ranges, opts.fold_filter or false)
 end --}}}
 local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
