@@ -196,13 +196,7 @@ local function highlight_all_nodes(node_types) --{{{
 end --}}}
 
 -- jump functions
-M.jump_to_node_or_field = function(opts) --{{{
-	if opts.kind == nil or opts.type == nil then
-		return
-	end
-
-	local cur_line = api.nvim_win_get_cursor(0)[1]
-
+local function jump_ranges_handling(opts) --{{{
 	local ranges
 	if opts.kind == "node" then
 		ranges = get_nodes_ranges(opts.type)
@@ -211,6 +205,11 @@ M.jump_to_node_or_field = function(opts) --{{{
 	end
 
 	ranges = range_processing(ranges, opts.fold_filter or false)
+
+	return ranges
+end --}}}
+local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
+	local cur_line = api.nvim_win_get_cursor(0)[1]
 
 	if #ranges > 0 then
 		local target_index
@@ -238,6 +237,15 @@ M.jump_to_node_or_field = function(opts) --{{{
 			api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 		end
 	end
+end --}}}
+M.jump_to_node_or_field = function(opts) --{{{
+	if opts.kind == nil or opts.type == nil then
+		return
+	end
+
+	local ranges = jump_ranges_handling(opts)
+
+	jump_based_on_opts_and_ranges(ranges, opts)
 end --}}}
 
 -- temporary keymaps
