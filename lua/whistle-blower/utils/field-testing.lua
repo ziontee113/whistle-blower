@@ -169,9 +169,15 @@ local function sort_ranges(ranges) --{{{
 
 	return results
 end --}}}
-local function range_processing(ranges) --{{{
+local function range_processing(ranges, opts) --{{{
 	ranges = filter_in_viewport(ranges)
-	ranges = filter_closed_folds(ranges)
+
+	if opts then
+		ranges = filter_closed_folds(ranges, opts)
+	else
+		ranges = filter_closed_folds(ranges)
+	end
+
 	ranges = sort_ranges(ranges)
 
 	return ranges
@@ -190,7 +196,7 @@ local function highlight_all_nodes(node_types) --{{{
 end --}}}
 
 -- jump functions
-M.jump_to_node_or_field = function(node_or_field, type_name, jump_next) --{{{
+M.jump_to_node_or_field = function(node_or_field, type_name, jump_next, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
 	local ranges
@@ -200,7 +206,7 @@ M.jump_to_node_or_field = function(node_or_field, type_name, jump_next) --{{{
 		ranges = get_fields_ranges(type_name)
 	end
 
-	ranges = range_processing(ranges)
+	ranges = range_processing(ranges, opts.fold_filter)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
@@ -224,11 +230,11 @@ M.jump_to_node_or_field = function(node_or_field, type_name, jump_next) --{{{
 		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
 end --}}}
-M.jump_to_node = function(node_types, jump_next) --{{{
-	M.jump_to_node_or_field("node", node_types, jump_next)
+M.jump_to_node = function(node_types, jump_next, opts) --{{{
+	M.jump_to_node_or_field("node", node_types, jump_next, opts)
 end --}}}
-M.jump_to_field = function(field_names, jump_next) --{{{
-	M.jump_to_node_or_field("field", field_names, jump_next)
+M.jump_to_field = function(field_names, jump_next, opts) --{{{
+	M.jump_to_node_or_field("field", field_names, jump_next, opts)
 end --}}}
 
 -- temporaty keymaps
