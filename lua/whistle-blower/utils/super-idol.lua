@@ -1,4 +1,5 @@
 local api = vim.api
+local field_testing = require("whistle-blower.utils.field-testing")
 
 -- kemap shorthands
 local keymap = vim.keymap.set
@@ -24,6 +25,31 @@ local test_hydra = Hydra({
 		color = "pink",
 	},
 	heads = { --{{{
+		{
+			"O",
+			function()
+				field_testing.jump_to_prev_or_next_field("clause", false)
+			end,
+		},
+		{
+			"o",
+			function()
+				field_testing.jump_to_prev_or_next_field("clause", true)
+			end,
+		},
+
+		{
+			"I",
+			function()
+				field_testing.jump_to_prev_or_next_field("condition", false)
+			end,
+		},
+		{
+			"i",
+			function()
+				field_testing.jump_to_prev_or_next_field("condition", true)
+			end,
+		},
 		{
 			"a",
 			function()
