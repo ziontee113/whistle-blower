@@ -213,7 +213,10 @@ M.jump_to_node_or_field = function(opts) --{{{
 	ranges = range_processing(ranges, opts.fold_filter or false)
 
 	if #ranges > 0 then
-		local target_index = opts.next and 1 or #ranges
+		local target_index
+		if opts.jump_loop then
+			target_index = opts.next and 1 or #ranges
+		end
 
 		if opts.next then
 			for i, range in ipairs(ranges) do
@@ -231,7 +234,9 @@ M.jump_to_node_or_field = function(opts) --{{{
 			end
 		end
 
-		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
+		if target_index then
+			api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
+		end
 	end
 end --}}}
 
