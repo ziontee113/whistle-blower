@@ -64,7 +64,7 @@ local function filter_in_viewport(ranges) --{{{
 	local filtered_results = {}
 
 	for _, range in ipairs(ranges) do
-		if top < range[1] and bottom > range[1] then
+		if top <= range[1] + 1 and bottom >= range[1] + 1 then
 			table.insert(filtered_results, range)
 		end
 	end
