@@ -28,41 +28,63 @@ local test_hydra = Hydra({
 		{
 			"F",
 			function()
-				field_testing.jump_to_node({ "function_declaration", "function_definition" }, false)
+				field_testing.jump_to_node_or_field({
+					kind = "node",
+					type = { "function_declaration", "function_definition" },
+				})
 			end,
 		},
 		{
 			"f",
 			function()
-				field_testing.jump_to_node({ "function_declaration", "function_definition" }, true)
+				field_testing.jump_to_node_or_field({
+					kind = "node",
+					type = { "function_declaration", "function_definition" },
+					next = true,
+				})
 			end,
 		},
 
 		{
 			"O",
 			function()
-				field_testing.jump_to_field("clause", false)
+				field_testing.jump_to_node_or_field({
+					kind = "field",
+					type = { "clause" },
+				})
 			end,
 		},
 		{
 			"o",
 			function()
-				field_testing.jump_to_field("clause", true)
+				field_testing.jump_to_node_or_field({
+					kind = "field",
+					type = { "clause" },
+					next = true,
+				})
 			end,
 		},
 
 		{
 			"I",
 			function()
-				field_testing.jump_to_field("condition", false)
+				field_testing.jump_to_node_or_field({
+					kind = "field",
+					type = { "condition" },
+				})
 			end,
 		},
 		{
 			"i",
 			function()
-				field_testing.jump_to_field("condition", true)
+				field_testing.jump_to_node_or_field({
+					kind = "field",
+					type = { "condition" },
+					next = true,
+				})
 			end,
 		},
+
 		{
 			"a",
 			function()
