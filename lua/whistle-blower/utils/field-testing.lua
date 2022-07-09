@@ -41,20 +41,35 @@ local function delete_all_local_marks() --{{{
 	end
 end --}}}
 
--- field related functions
-local function sort_field_ranges(ranges) --{{{
-	local results = {}
+-- node related functions
+local function get_nodes(node_types) --{{{
+	local nodes = {}
 
-	for _, v in pairs(ranges) do
-		table.insert(results, v)
+	if type(node_types) == "string" then
+		node_types = { node_types }
 	end
 
-	table.sort(results, function(a, b)
-		return a[1] < b[1]
-	end)
+	for _, node_type in ipairs(node_types) do
+		for _, node in ipairs(get_nodes_in_array()) do
+			if node:type() == node_type then
+				table.insert(nodes, node)
+			end
+		end
+	end
 
-	return results
+	return nodes
 end --}}}
+local function get_nodes_ranges(node_types) --{{{
+	local ranges = {}
+
+	for _, node in ipairs(get_nodes(node_types)) do
+		table.insert(ranges, node:range())
+	end
+
+	return ranges
+end --}}}
+
+-- field related functions
 local function get_fields(field_name) --{{{
 	local fields = {}
 
@@ -88,6 +103,19 @@ local function get_fields_ranges(field_name) --{{{
 	end
 
 	return ranges
+end --}}}
+local function sort_ranges(ranges) --{{{
+	local results = {}
+
+	for _, v in pairs(ranges) do
+		table.insert(results, v)
+	end
+
+	table.sort(results, function(a, b)
+		return a[1] < b[1]
+	end)
+
+	return results
 end --}}}
 
 -- viewport related functions
@@ -157,7 +185,7 @@ M.jump_to_field = function(field_names, jump_next) --{{{
 
 	ranges = filter_in_viewport(ranges)
 	ranges = filter_closed_folds(ranges)
-	ranges = sort_field_ranges(ranges)
+	ranges = sort_ranges(ranges)
 
 	if #ranges > 0 then
 		local target_index = jump_next and 1 or #ranges
@@ -201,8 +229,6 @@ end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>h", function() --{{{
 	M.jump_to_field({ "condition" }, false)
 end, opts) --}}}
-
--- Hydra
 
 --------------------------------------
 
