@@ -152,7 +152,7 @@ local function filter_closed_folds(ranges) --{{{
 	local filtered_results = {}
 
 	for _, range in ipairs(ranges) do
-		if fn.foldclosed(range[1]) == -1 then
+		if fn.foldclosed(range[1] + 1) == -1 or fn.foldclosed(range[1] + 1) == range[1] + 1 then
 			table.insert(filtered_results, range)
 		end
 	end
@@ -164,6 +164,11 @@ end --}}}
 local function highlight_all_fields(field_name) --{{{
 	for _, range in ipairs(get_fields_ranges(field_name)) do
 		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
+	end
+end --}}}
+local function highlight_all_nodes(node_types) --{{{
+	for _, range in ipairs(get_nodes_ranges(node_types)) do
+		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[2] + 4)
 	end
 end --}}}
 
@@ -247,12 +252,18 @@ vim.keymap.set("n", "<F24><F24>c", function() --{{{
 	delete_all_local_marks()
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
 end, opts) --}}}
+vim.keymap.set("n", "<F24><F24>j", function() --{{{
+	delete_all_local_marks()
+
+	api.nvim_buf_clear_namespace(0, ns, 0, -1)
+	highlight_all_nodes({ "function_declaration", "function_definition" })
+end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	delete_all_local_marks()
 
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
-	-- highlight_all_fields("condition")
-	highlight_all_fields("local_declaration")
+	highlight_all_fields("condition")
+	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>l", function() --{{{
 	M.jump_to_field({ "condition" }, true)
