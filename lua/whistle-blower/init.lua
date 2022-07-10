@@ -7,3 +7,5 @@ local core_hydra = require("whistle-blower.core.hydra")
 local core_nodes = require("whistle-blower.core.nodes")
 
 return M
+
+-- vim: foldmethod=marker foldmarker={{{,}}} foldlevel=0

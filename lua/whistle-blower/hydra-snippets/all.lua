@@ -52,3 +52,5 @@ return {
 	["if_statement"] = if_statement,
 	["for_loop"] = for_loop,
 }
+
+-- vim: foldmethod=marker foldmarker={{{,}}} foldlevel=0

@@ -187,4 +187,4 @@ vim.keymap.set("n", "<C-e>", function()
 	test_hydra:activate()
 end, { noremap = true, silent = true })
 
--- Todos
+-- vim: foldmethod=marker foldmarker={{{,}}} foldlevel=0
