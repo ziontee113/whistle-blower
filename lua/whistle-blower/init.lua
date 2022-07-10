@@ -1,8 +1,9 @@
+---@diagnostic disable: unused-local
 local M = {}
 local api = vim.api
 
 -- required functions
-local utils_super_idol = require("whistle-blower.utils.super-idol")
-local utils_field_testing = require("whistle-blower.utils.field-testing")
+local core_hydra = require("whistle-blower.core.hydra")
+local core_nodes = require("whistle-blower.core.nodes")
 
 return M
