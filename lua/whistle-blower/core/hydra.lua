@@ -17,6 +17,7 @@ local expand = ls.snip_expand
 local snippets = require("whistle-blower.hydra-snippets.all")
 
 -- test Hydra with LuaSnip
+local old_scrolloff = 0
 local test_hydra = Hydra({
 	name = "Test Hydra",
 	mode = { "n" },
@@ -24,10 +25,11 @@ local test_hydra = Hydra({
 	config = {
 		color = "pink",
 		on_enter = function()
+			old_scrolloff = vim.o.scrolloff
 			vim.o.scrolloff = 0
 		end,
 		on_exit = function()
-			vim.o.scrolloff = 8
+			vim.o.scrolloff = old_scrolloff
 		end,
 	},
 	heads = { --{{{
