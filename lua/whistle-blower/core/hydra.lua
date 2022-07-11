@@ -1,5 +1,5 @@
 local api = vim.api
-local field_testing = require("whistle-blower.core.jump")
+local jump = require("whistle-blower.core.virt-jump")
 
 -- kemap shorthands
 local keymap = vim.keymap.set
@@ -40,7 +40,7 @@ local test_hydra = Hydra({
 		{
 			"F",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
 					jump_loop = true,
@@ -51,7 +51,7 @@ local test_hydra = Hydra({
 		{
 			"f",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
 					next = true,
@@ -62,9 +62,35 @@ local test_hydra = Hydra({
 		},
 
 		{
+			"V",
+			function()
+				jump.jump_with_virt_text({
+					kind = "field",
+					type = { "local_declaration" },
+					jump_loop = true,
+				})
+				vim.fn.jobstart("cvlc ~/Sound/sc1_vo_loyalguard_L.wav --gain=0.11 --play-and-exit")
+			end,
+			{ nowait = true },
+		},
+		{
+			"v",
+			function()
+				jump.jump_with_virt_text({
+					kind = "field",
+					type = { "local_declaration" },
+					next = true,
+					jump_loop = true,
+				})
+				vim.fn.jobstart("cvlc ~/Sound/sc1_vo_loyalguard_L.wav --gain=0.11 --play-and-exit")
+			end,
+			{ nowait = true },
+		},
+
+		{
 			"O",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "field",
 					type = { "clause" },
 					jump_loop = true,
@@ -75,7 +101,7 @@ local test_hydra = Hydra({
 		{
 			"o",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "field",
 					type = { "clause" },
 					next = true,
@@ -88,7 +114,7 @@ local test_hydra = Hydra({
 		{
 			"E",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "node",
 					type = { "else_statement" },
 					jump_loop = true,
@@ -98,7 +124,7 @@ local test_hydra = Hydra({
 		{
 			"e",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "node",
 					type = { "else_statement" },
 					next = true,
@@ -112,7 +138,7 @@ local test_hydra = Hydra({
 		{
 			"I",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "field",
 					type = { "condition" },
 					jump_loop = true,
@@ -124,7 +150,7 @@ local test_hydra = Hydra({
 		{
 			"i",
 			function()
-				field_testing.jump_to_node_or_field({
+				jump.jump_with_virt_text({
 					kind = "field",
 					type = { "condition" },
 					next = true,

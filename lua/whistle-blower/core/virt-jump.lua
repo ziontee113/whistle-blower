@@ -33,11 +33,11 @@ M.jump_with_virt_text = function(opts)
 
 	local ranges = jump.jump_ranges_handling(opts)
 
-	for _, range in ipairs(ranges) do
-		set_extmark(range[1], range[2], nil, "STS_highlight", 200)
+	for index, range in ipairs(ranges) do
+		set_extmark(range[1], range[2], tostring(index), "STS_highlight", 200)
 	end
 
-	-- jump.jump_to_node_or_field(opts)
+	jump.jump_to_node_or_field(opts)
 end
 
 -- temporary keymaps
