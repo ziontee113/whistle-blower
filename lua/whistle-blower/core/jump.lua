@@ -265,19 +265,6 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	highlight_all_fields("condition")
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
-vim.keymap.set("n", "<F24><F24>l", function() --{{{
-	M.jump_to_node_or_field({
-		kind = "field",
-		type = "condition",
-		next = true,
-	})
-end, opts) --}}}
-vim.keymap.set("n", "<F24><F24>h", function() --{{{
-	M.jump_to_node_or_field({
-		kind = "field",
-		type = "condition",
-	})
-end, opts) --}}}
 
 vim.keymap.set("n", "  x", function() --{{{
 	local cmd = [[
