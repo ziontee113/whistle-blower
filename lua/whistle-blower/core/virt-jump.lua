@@ -31,13 +31,11 @@ end --}}}
 M.jump_with_virt_text = function(opts)
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
 
-	local ranges = jump.jump_ranges_handling(opts)
+	local ranges, target_index = jump.jump_to_node_or_field(opts)
 
 	for index, range in ipairs(ranges) do
-		set_extmark(range[1], range[2], tostring(index), "STS_highlight", 200)
+		set_extmark(range[1], range[2], tostring(index), "STS_highlight", 500)
 	end
-
-	jump.jump_to_node_or_field(opts)
 end
 
 -- temporary keymaps

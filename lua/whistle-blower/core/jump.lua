@@ -229,6 +229,7 @@ function M.target_index_handling(ranges, opts) --{{{
 			end
 		end
 	end
+
 	return target_index
 end --}}}
 local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
@@ -239,6 +240,8 @@ local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
 
 		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
+
+	return ranges, target_index
 end --}}}
 
 function M.jump_ranges_handling(opts) --{{{
@@ -270,7 +273,7 @@ function M.jump_to_node_or_field(opts) --{{{
 
 	local ranges = M.jump_ranges_handling(opts)
 
-	jump_based_on_opts_and_ranges(ranges, opts)
+	return jump_based_on_opts_and_ranges(ranges, opts)
 end --}}}
 
 -- temporary keymaps
