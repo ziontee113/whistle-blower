@@ -1,5 +1,5 @@
 local api = vim.api
-local field_testing = require("whistle-blower.core.nodes")
+local field_testing = require("whistle-blower.core.jump")
 
 -- kemap shorthands
 local keymap = vim.keymap.set
