@@ -47,6 +47,96 @@ local test_hydra = Hydra({
 			end,
 			{ nowait = true },
 		},
+		{
+			"2",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 2,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"3",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 3,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"4",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 4,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"5",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 5,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"6",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 6,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"7",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 7,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"8",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 8,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"9",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 9,
+				})
+			end,
+			{ nowait = true },
+		},
+		{
+			"0",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 10,
+				})
+			end,
+			{ nowait = true },
+		},
 
 		{
 			"F",
