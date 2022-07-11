@@ -198,23 +198,7 @@ local function highlight_all_nodes(node_types) --{{{
 end --}}}
 
 -- jump functions
-M.jump_ranges_handling = function(opts) --{{{
-	local ranges
-
-	if opts.kind == "index" and last_kind_type.kind ~= nil then
-		opts.kind = last_kind_type.kind
-		opts.type = last_kind_type.type
-	end
-
-	if opts.kind == "node" then
-		ranges = get_nodes_ranges(opts.type)
-	elseif opts.kind == "field" then
-		ranges = get_fields_ranges(opts.type)
-	end
-
-	return range_processing(ranges, opts.fold_filter or false)
-end --}}}
-M.jump_based_on_opts_and_ranges = function(ranges, opts) --{{{
+function M.target_index_handling(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
 	local target_index
@@ -245,6 +229,10 @@ M.jump_based_on_opts_and_ranges = function(ranges, opts) --{{{
 			end
 		end
 	end
+	return target_index
+end --}}}
+local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
+	local target_index = M.target_index_handling(ranges, opts)
 
 	if target_index then
 		last_kind_type = { kind = opts.kind, type = opts.type }
@@ -252,7 +240,24 @@ M.jump_based_on_opts_and_ranges = function(ranges, opts) --{{{
 		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
 end --}}}
-M.jump_to_node_or_field = function(opts) --{{{
+
+function M.jump_ranges_handling(opts) --{{{
+	local ranges
+
+	if opts.kind == "index" and last_kind_type.kind ~= nil then
+		opts.kind = last_kind_type.kind
+		opts.type = last_kind_type.type
+	end
+
+	if opts.kind == "node" then
+		ranges = get_nodes_ranges(opts.type)
+	elseif opts.kind == "field" then
+		ranges = get_fields_ranges(opts.type)
+	end
+
+	return range_processing(ranges, opts.fold_filter or false)
+end --}}}
+function M.jump_to_node_or_field(opts) --{{{
 	if opts.kind == nil then
 		return
 	end
@@ -265,7 +270,7 @@ M.jump_to_node_or_field = function(opts) --{{{
 
 	local ranges = M.jump_ranges_handling(opts)
 
-	M.jump_based_on_opts_and_ranges(ranges, opts)
+	jump_based_on_opts_and_ranges(ranges, opts)
 end --}}}
 
 -- temporary keymaps
