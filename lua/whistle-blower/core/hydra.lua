@@ -17,6 +17,7 @@ local expand = ls.snip_expand
 local snippets = require("whistle-blower.hydra-snippets.all")
 
 -- test Hydra with LuaSnip
+
 local old_scrolloff = 0
 local test_hydra = Hydra({
 	name = "Test Hydra",
@@ -263,7 +264,7 @@ local test_hydra = Hydra({
 		},
 
 		{
-			"a",
+			"<C-a>",
 			function()
 				vim.cmd("norm! O")
 
@@ -273,33 +274,15 @@ local test_hydra = Hydra({
 				vim.schedule(function()
 					expand(snippets["if_statement"])
 
-					vim.schedule(function()
-						key = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
-						vim.api.nvim_feedkeys(key, "i", false)
-					end)
+					-- vim.schedule(function()
+					-- 	key = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+					-- 	vim.api.nvim_feedkeys(key, "i", false)
+					-- 	vim.api.nvim_feedkeys(key, "s", false)
+					-- end)
 				end)
 			end,
 		},
-		{
-			"d",
-			function()
-				local curline = api.nvim_win_get_cursor(0)[1]
 
-				---> get parent node indent
-
-				api.nvim_buf_set_lines(0, curline - 1, curline - 1, false, { string.rep(" ", 12), "" })
-
-				--> Find a way to get the correct indent
-				api.nvim_win_set_cursor(0, { curline, 8 })
-
-				expand(snippets["for_loop"])
-				vim.schedule(function()
-					local key = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
-					vim.api.nvim_feedkeys(key, "i", false)
-				end)
-			end,
-			{ nowait = true },
-		},
 		{
 			"w",
 			function()

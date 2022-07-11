@@ -20,12 +20,14 @@ local if_statement = s( -- if statement
 	{ trig = "if_statement", hidden = true },
 	fmt(
 		[[
-i{}f condition then
-  -- TODO:
+{}if {} then
+  {}
 end
 ]],
 		{
-			i(1, ""),
+			i(1),
+			i(2, "condition"),
+			i(3, "-- TODO"),
 		}
 	)
 )

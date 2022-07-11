@@ -2,6 +2,7 @@
 local M = {}
 local api = vim.api
 local fn = vim.fn
+local ts_utils = require("nvim-treesitter.ts_utils")
 
 local ns = api.nvim_create_namespace("Field Marking")
 
