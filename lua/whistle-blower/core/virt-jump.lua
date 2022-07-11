@@ -1,10 +1,11 @@
 local M = {}
 local api = vim.api
+local fn = vim.fn
 
 local jump = require("whistle-blower.core.jump")
 
 M.jump_with_virt_text = function(opts)
-	jump.jump_to_node_or_field(opts)
+	local ranges = jump.jump_ranges_handling(opts)
 end
 
 -- temporary keymaps
