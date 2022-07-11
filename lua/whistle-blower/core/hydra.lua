@@ -38,6 +38,17 @@ local test_hydra = Hydra({
 	},
 	heads = { --{{{
 		{
+			"1",
+			function()
+				jump.jump_with_virt_text({
+					kind = "index",
+					index = 1,
+				})
+			end,
+			{ nowait = true },
+		},
+
+		{
 			"F",
 			function()
 				jump.jump_with_virt_text({

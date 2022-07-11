@@ -5,6 +5,8 @@ local fn = vim.fn
 
 local ns = api.nvim_create_namespace("Field Marking")
 
+local last_kind_type = { kind = nil, type = nil }
+
 --------------------------------------
 
 -- get nodes functions
@@ -200,45 +202,66 @@ M.jump_ranges_handling = function(opts) --{{{
 	local ranges
 	if opts.kind == "node" then
 		ranges = get_nodes_ranges(opts.type)
-	else
+	elseif opts.kind == "field" then
 		ranges = get_fields_ranges(opts.type)
 	end
 
-	return range_processing(ranges, opts.fold_filter or false)
+	if opts.kind ~= "index" then
+		return range_processing(ranges, opts.fold_filter or false)
+	else
+		return {}
+	end
 end --}}}
 M.jump_based_on_opts_and_ranges = function(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
 
-	if #ranges > 0 then
-		local target_index
-		if opts.jump_loop then
-			target_index = opts.next and 1 or #ranges
+	local target_index
+	if opts.index then
+		if opts.index > 0 and opts.index <= #ranges then
+			target_index = opts.index
 		end
+	else
+		if #ranges > 0 then
+			if opts.jump_loop then
+				target_index = opts.next and 1 or #ranges
+			end
 
-		if opts.next then
-			for i, range in ipairs(ranges) do
-				if range[1] + 1 > cur_line then
-					target_index = i
-					break
+			if opts.next then
+				for i, range in ipairs(ranges) do
+					if range[1] + 1 > cur_line then
+						target_index = i
+						break
+					end
+				end
+			else
+				for i = #ranges, 1, -1 do
+					if ranges[i][1] + 1 < cur_line then
+						target_index = i
+						break
+					end
 				end
 			end
-		else
-			for i = #ranges, 1, -1 do
-				if ranges[i][1] + 1 < cur_line then
-					target_index = i
-					break
-				end
-			end
 		end
+	end
 
-		if target_index then
-			api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
-		end
+	if target_index then
+		last_kind_type = { kind = opts.kind, type = opts.type }
+
+		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
 end --}}}
 M.jump_to_node_or_field = function(opts) --{{{
-	if opts.kind == nil or opts.type == nil then
+	if opts.kind == nil then
 		return
+	end
+
+	if opts.kind == "index" then
+		if last_kind_type.kind ~= nil then
+			opts.kind = last_kind_type.kind
+			opts.type = last_kind_type.type
+		else
+			return
+		end
 	end
 
 	local ranges = M.jump_ranges_handling(opts)
