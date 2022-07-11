@@ -200,17 +200,19 @@ end --}}}
 -- jump functions
 M.jump_ranges_handling = function(opts) --{{{
 	local ranges
+
+	if opts.kind == "index" and last_kind_type.kind ~= nil then
+		opts.kind = last_kind_type.kind
+		opts.type = last_kind_type.type
+	end
+
 	if opts.kind == "node" then
 		ranges = get_nodes_ranges(opts.type)
 	elseif opts.kind == "field" then
 		ranges = get_fields_ranges(opts.type)
 	end
 
-	if opts.kind ~= "index" then
-		return range_processing(ranges, opts.fold_filter or false)
-	else
-		return {}
-	end
+	return range_processing(ranges, opts.fold_filter or false)
 end --}}}
 M.jump_based_on_opts_and_ranges = function(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
@@ -256,10 +258,7 @@ M.jump_to_node_or_field = function(opts) --{{{
 	end
 
 	if opts.kind == "index" then
-		if last_kind_type.kind ~= nil then
-			opts.kind = last_kind_type.kind
-			opts.type = last_kind_type.type
-		else
+		if last_kind_type.kind == nil then
 			return
 		end
 	end
