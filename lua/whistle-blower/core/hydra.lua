@@ -27,9 +27,13 @@ local test_hydra = Hydra({
 		on_enter = function()
 			old_scrolloff = vim.o.scrolloff
 			vim.o.scrolloff = 0
+
+			-- vim.fn.jobstart("cvlc ~/Sound/sc1_vo_loyalguard_L.wav --gain=0.15 --play-and-exit")
+			vim.fn.jobstart("cvlc ~/Sound/all_00302.wav --gain=0.2 --play-and-exit")
 		end,
 		on_exit = function()
 			vim.o.scrolloff = old_scrolloff
+			vim.fn.jobstart("cvlc ~/Sound/all_00299.wav --gain=0.2 --play-and-exit")
 		end,
 	},
 	heads = { --{{{
@@ -41,6 +45,7 @@ local test_hydra = Hydra({
 					type = { "function_declaration", "function_definition" },
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/sc1_vo_gunslinger_L.wav --gain=0.11 --play-and-exit")
 			end,
 		},
 		{
@@ -52,6 +57,7 @@ local test_hydra = Hydra({
 					next = true,
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/sc1_vo_gunslinger_L.wav --gain=0.11 --play-and-exit")
 			end,
 		},
 
@@ -63,6 +69,7 @@ local test_hydra = Hydra({
 					type = { "clause" },
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_swords_L.wav --gain=0.11 --play-and-exit")
 			end,
 		},
 		{
@@ -74,6 +81,31 @@ local test_hydra = Hydra({
 					next = true,
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_swords_L.wav --gain=0.11 --play-and-exit")
+			end,
+		},
+
+		{
+			"E",
+			function()
+				field_testing.jump_to_node_or_field({
+					kind = "node",
+					type = { "else_statement" },
+					jump_loop = true,
+				})
+			end,
+		},
+		{
+			"e",
+			function()
+				field_testing.jump_to_node_or_field({
+					kind = "node",
+					type = { "else_statement" },
+					next = true,
+					jump_loop = true,
+				})
+
+				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_trick_L.wav --gain=0.15 --play-and-exit")
 			end,
 		},
 
@@ -85,6 +117,8 @@ local test_hydra = Hydra({
 					type = { "condition" },
 					jump_loop = true,
 				})
+
+				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_trick_L.wav --gain=0.15 --play-and-exit")
 			end,
 		},
 		{
@@ -96,6 +130,8 @@ local test_hydra = Hydra({
 					next = true,
 					jump_loop = true,
 				})
+
+				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_trick_L.wav --gain=0.15 --play-and-exit")
 			end,
 		},
 

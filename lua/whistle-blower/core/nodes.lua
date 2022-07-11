@@ -279,6 +279,13 @@ vim.keymap.set("n", "<F24><F24>h", function() --{{{
 	})
 end, opts) --}}}
 
+vim.keymap.set("n", "  x", function()
+	local cmd = [[
+cvlc ~/Sound/all_00299.wav --gain=0.35 --play-and-exit
+]]
+	fn.jobstart(cmd)
+end, { noremap = true, silent = true })
+
 --------------------------------------
 
 return M
