@@ -20,11 +20,14 @@ local function recursive_child_iter(node, table_to_insert) --{{{
 		end
 	end
 end --}}}
-local function get_nodes_in_array() --{{{
+local function get_nodes_in_array(root) --{{{
 	local ts = vim.treesitter
 	local parser = ts.get_parser(0)
 	local trees = parser:parse()
-	local root = trees[1]:root()
+
+	if not root then
+		root = trees[1]:root()
+	end
 
 	local nodes = {}
 
@@ -119,15 +122,17 @@ local function get_nodes_ranges(node_types) --{{{
 end --}}}
 
 -- field related functions
-local function get_fields(field_names) --{{{
+local function get_fields(field_names, root) --{{{
 	local fields = {}
 
 	if type(field_names) == "string" then
 		field_names = { field_names }
 	end
 
+	local nodes = get_nodes_in_array(root)
+
 	for _, name in ipairs(field_names) do
-		for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
+		for _, value in ipairs(nodes) do -- loop through all nodes
 			local nodes = value:parent():field(name)
 
 			if #nodes > 0 then
@@ -185,6 +190,32 @@ local function range_processing(ranges, opts) --{{{
 
 	return ranges
 end --}}}
+
+local function find_ancestor_node_or_field(opts)
+	local node = ts_utils.get_node_at_cursor(0)
+	local parent = node:parent()
+	local result
+
+	if opts.kind == "node" then
+		while parent do
+			if node:type() == opts.type then
+				result = node
+				break
+			else
+				node = parent
+				parent = node:parent()
+			end
+		end
+	end
+
+	if result then
+		local range = table.pack(result:range())
+		api.nvim_buf_clear_namespace(0, ns, 0, -1)
+		api.nvim_buf_add_highlight(0, ns, "STS_Highlight", range[1], range[2], range[4])
+	end
+
+	return result
+end
 
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
@@ -284,6 +315,12 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	highlight_all_fields("condition")
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
+vim.keymap.set("n", "<F24><F24>p", function()
+	find_ancestor_node_or_field({
+		kind = "node",
+		type = "if_statement",
+	})
+end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "  x", function() --{{{
 	local cmd = [[
