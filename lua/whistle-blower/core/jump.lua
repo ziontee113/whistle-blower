@@ -122,14 +122,14 @@ local function get_nodes_ranges(node_types) --{{{
 end --}}}
 
 -- field related functions
-local function get_fields(field_names, root) --{{{
+local function get_fields(field_names) --{{{
 	local fields = {}
 
 	if type(field_names) == "string" then
 		field_names = { field_names }
 	end
 
-	local nodes = get_nodes_in_array(root)
+	local nodes = get_nodes_in_array()
 
 	for _, name in ipairs(field_names) do
 		for _, value in ipairs(nodes) do -- loop through all nodes
@@ -191,6 +191,12 @@ local function range_processing(ranges, opts) --{{{
 	return ranges
 end --}}}
 
+local function highlight_node(node, hl_group) --{{{
+	local range = table.pack(node:range())
+	api.nvim_buf_add_highlight(0, ns, hl_group or "STS_Highlight", range[1], range[2], range[4])
+end --}}}
+
+-- ancestor related functions
 local function find_ancestor_node_or_field(opts)
 	local node = ts_utils.get_node_at_cursor(0)
 	local parent = node:parent()
@@ -206,12 +212,28 @@ local function find_ancestor_node_or_field(opts)
 				parent = node:parent()
 			end
 		end
+	elseif opts.kind == "field" then
+		while parent do
+			local fields = parent:field(opts.type)
+
+			if #fields > 0 then
+				for _, field in ipairs(fields) do
+					if node == field then
+						result = field
+						break
+					end
+				end
+				break
+			end
+
+			node = parent
+			parent = node:parent()
+		end
 	end
 
 	if result then
-		local range = table.pack(result:range())
 		api.nvim_buf_clear_namespace(0, ns, 0, -1)
-		api.nvim_buf_add_highlight(0, ns, "STS_Highlight", range[1], range[2], range[4])
+		highlight_node(result)
 	end
 
 	return result
@@ -316,6 +338,12 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>p", function()
+	find_ancestor_node_or_field({
+		kind = "field",
+		type = "clause",
+	})
+end, { noremap = true, silent = true })
+vim.keymap.set("n", "<F24><F24>o", function()
 	find_ancestor_node_or_field({
 		kind = "node",
 		type = "if_statement",
