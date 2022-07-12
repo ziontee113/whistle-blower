@@ -6,7 +6,7 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 local ns = api.nvim_create_namespace("Field Marking")
 
-local last_kind_type = { kind = nil, type = nil }
+local last_kind_type = { kind = nil, type = nil, descendants = nil }
 
 --------------------------------------
 
@@ -328,7 +328,7 @@ local function jump_based_on_opts_and_ranges(ranges, opts) --{{{
 	local target_index = M.target_index_handling(ranges, opts)
 
 	if target_index then
-		last_kind_type = { kind = opts.kind, type = opts.type }
+		last_kind_type = { kind = opts.kind, type = opts.type, descendants = opts.descendants }
 
 		api.nvim_win_set_cursor(0, { ranges[target_index][1] + 1, ranges[target_index][2] })
 	end
@@ -338,11 +338,6 @@ end --}}}
 
 function M.jump_ranges_handling(opts) --{{{
 	local ranges
-
-	if opts.kind == "index" and last_kind_type.kind ~= nil then
-		opts.kind = last_kind_type.kind
-		opts.type = last_kind_type.type
-	end
 
 	if opts.kind == "node" then
 		ranges = get_nodes_ranges(opts.type)
@@ -360,19 +355,21 @@ function M.jump_to_node_or_field(opts) --{{{
 	if opts.kind == "index" then
 		if last_kind_type.kind == nil then
 			return
+		else
+			opts.kind = last_kind_type.kind
+			opts.type = last_kind_type.type
+			opts.descendants = last_kind_type.descendants
 		end
 	end
 
-	local ranges = M.jump_ranges_handling(opts)
-
-	return jump_based_on_opts_and_ranges(ranges, opts)
-end --}}}
-
-function M.jump_to_descendants(opts) --{{{
-	local descendants = find_descendants_of_closest_anscestor(opts)
-	local ranges = ranges_from_nodes(descendants)
-
-	ranges = range_processing(ranges, opts)
+	local ranges
+	if opts.descendants then
+		local descendants = find_descendants_of_closest_anscestor(opts)
+		ranges = ranges_from_nodes(descendants)
+		ranges = range_processing(ranges, opts)
+	else
+		ranges = M.jump_ranges_handling(opts)
+	end
 
 	return jump_based_on_opts_and_ranges(ranges, opts)
 end --}}}

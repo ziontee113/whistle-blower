@@ -267,20 +267,21 @@ local test_hydra = Hydra({
 		{
 			"A",
 			function()
-				jump.jump_to_descendants({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = "condition",
 					descendants = {
 						{ kind = "field", type = "left" },
 						{ kind = "field", type = "right" },
 					},
+					jump_loop = true,
 				})
 			end,
 		},
 		{
 			"a",
 			function()
-				jump.jump_to_descendants({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = "condition",
 					descendants = {
@@ -288,6 +289,7 @@ local test_hydra = Hydra({
 						{ kind = "field", type = "right" },
 					},
 					next = true,
+					jump_loop = true,
 				})
 			end,
 		},

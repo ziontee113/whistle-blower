@@ -28,15 +28,15 @@ local function set_extmark(start_row, start_col, contents, color_group, timeout)
 
 	return extmark_id
 end --}}}
-M.jump_with_virt_text = function(opts)
+M.jump_with_virt_text = function(opts) --{{{
 	api.nvim_buf_clear_namespace(0, ns, 0, -1)
 
-	local ranges, target_index = jump.jump_to_node_or_field(opts)
+	local ranges = jump.jump_to_node_or_field(opts)
 
 	for index, range in ipairs(ranges) do
 		set_extmark(range[1], range[2], tostring(index), "STS_highlight", 500)
 	end
-end
+end --}}}
 
 -- temporary keymaps
 local opts = { noremap = true, silent = true }
