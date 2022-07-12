@@ -90,7 +90,7 @@ local function filter_closed_folds(ranges, first_line_of_fold) --{{{
 end --}}}
 
 -- node related functions
-local function get_nodes(node_types) --{{{
+local function get_nodes(node_types, root, push_table) --{{{
 	local nodes = {}
 
 	if type(node_types) == "string" then
@@ -98,10 +98,16 @@ local function get_nodes(node_types) --{{{
 	end
 
 	for _, node_type in ipairs(node_types) do
-		for _, node in ipairs(get_nodes_in_array()) do
+		for _, node in ipairs(get_nodes_in_array(root)) do
 			if node:type() == node_type then
 				table.insert(nodes, node)
 			end
+		end
+	end
+
+	if push_table then
+		for _, field in ipairs(fields) do
+			table.insert(push_table, field)
 		end
 	end
 
@@ -118,14 +124,14 @@ local function get_nodes_ranges(node_types) --{{{
 end --}}}
 
 -- field related functions
-local function get_fields(field_names) --{{{
+local function get_fields(field_names, root, push_table) --{{{
 	local fields = {}
 
 	if type(field_names) == "string" then
 		field_names = { field_names }
 	end
 
-	for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
+	for _, value in ipairs(get_nodes_in_array(root)) do -- loop through all nodes
 		for _, name in ipairs(field_names) do
 			local nodes = value:parent():field(name)
 
@@ -143,6 +149,12 @@ local function get_fields(field_names) --{{{
 					end
 				end
 			end
+		end
+	end
+
+	if push_table then
+		for _, field in ipairs(fields) do
+			table.insert(push_table, field)
 		end
 	end
 
@@ -234,9 +246,21 @@ local function find_ancestor_node_or_field(opts) --{{{
 
 	return result
 end --}}}
-local function find_descendants_of_node(opts)
-	--
-end
+local function find_descendants_of_node(opts, root) --{{{
+	local results = {}
+
+	if opts.descendants then
+		for _, item in ipairs(opts.descendants) do
+			if item.kind == "node" then
+				get_fields(item.type, root, results)
+			elseif item.kind == "field" then
+				get_nodes(item.type, root, results)
+			end
+		end
+	end
+
+	return results
+end --}}}
 
 -- There is a fundamental flaw with our current system --
 -- Now we have to refactor our entire code base to allow --
