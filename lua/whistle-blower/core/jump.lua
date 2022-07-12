@@ -106,8 +106,8 @@ local function get_nodes(node_types, root, push_table) --{{{
 	end
 
 	if push_table then
-		for _, field in ipairs(fields) do
-			table.insert(push_table, field)
+		for _, node in ipairs(nodes) do
+			table.insert(push_table, node)
 		end
 	end
 
@@ -200,11 +200,13 @@ local function range_processing(ranges, opts) --{{{
 end --}}}
 
 local function highlight_node(node, hl_group) --{{{
-	local range = table.pack(node:range())
-	api.nvim_buf_add_highlight(0, ns, hl_group or "STS_Highlight", range[1], range[2], range[4])
+	if node then
+		local range = table.pack(node:range())
+		api.nvim_buf_add_highlight(0, ns, hl_group or "STS_Highlight", range[1], range[2], range[4])
+	end
 end --}}}
 
--- ancestor related functions
+-- ancestor & descendants related functions
 local function find_ancestor_node_or_field(opts) --{{{
 	local node = ts_utils.get_node_at_cursor(0)
 	local parent = node:parent()
@@ -239,11 +241,6 @@ local function find_ancestor_node_or_field(opts) --{{{
 		end
 	end
 
-	if result then
-		api.nvim_buf_clear_namespace(0, ns, 0, -1)
-		highlight_node(result)
-	end
-
 	return result
 end --}}}
 local function find_descendants_of_node(opts, root) --{{{
@@ -251,9 +248,9 @@ local function find_descendants_of_node(opts, root) --{{{
 
 	if opts.descendants then
 		for _, item in ipairs(opts.descendants) do
-			if item.kind == "node" then
+			if item.kind == "field" then
 				get_fields(item.type, root, results)
-			elseif item.kind == "field" then
+			elseif item.kind == "node" then
 				get_nodes(item.type, root, results)
 			end
 		end
@@ -261,6 +258,18 @@ local function find_descendants_of_node(opts, root) --{{{
 
 	return results
 end --}}}
+local function find_descendants_of_closest_anscestor(opts)
+	local ancestor = find_ancestor_node_or_field(opts)
+	local descendants = find_descendants_of_node(opts, ancestor)
+
+	if descendants then
+		for _, node in ipairs(descendants) do
+			highlight_node(node)
+		end
+	end
+
+	return descendants
+end
 
 -- There is a fundamental flaw with our current system --
 -- Now we have to refactor our entire code base to allow --
@@ -365,9 +374,13 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>p", function()
-	find_ancestor_node_or_field({
+	find_descendants_of_closest_anscestor({
 		kind = "field",
-		type = "clause",
+		type = "condition",
+		descendants = {
+			{ kind = "field", type = "left" },
+			{ kind = "field", type = "right" },
+		},
 	})
 end, { noremap = true, silent = true })
 vim.keymap.set("n", "<F24><F24>o", function()
