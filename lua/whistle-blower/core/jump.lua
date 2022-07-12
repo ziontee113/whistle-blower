@@ -186,18 +186,6 @@ local function range_processing(ranges, opts) --{{{
 	return ranges
 end --}}}
 
--- highlight functions
-local function highlight_all_fields(field_name) --{{{
-	for _, range in ipairs(get_fields_ranges(field_name)) do
-		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[4])
-	end
-end --}}}
-local function highlight_all_nodes(node_types) --{{{
-	for _, range in ipairs(get_nodes_ranges(node_types)) do
-		api.nvim_buf_add_highlight(0, ns, "GruvboxBlueSign", range[1], range[2], range[2] + 4)
-	end
-end --}}}
-
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
