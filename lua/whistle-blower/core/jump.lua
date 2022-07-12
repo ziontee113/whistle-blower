@@ -180,6 +180,10 @@ local function sort_ranges(ranges) --{{{
 	end
 
 	table.sort(results, function(a, b)
+		return a[2] < b[2]
+	end)
+
+	table.sort(results, function(a, b)
 		return a[1] < b[1]
 	end)
 
@@ -265,6 +269,16 @@ local function find_descendants_of_closest_anscestor(opts) --{{{
 	return descendants
 end --}}}
 
+local function ranges_from_nodes(nodes) --{{{
+	local ranges = {}
+
+	for _, node in ipairs(nodes) do
+		table.insert(ranges, table.pack(node:range()))
+	end
+
+	return ranges
+end --}}}
+
 -- There is a fundamental flaw with our current system --
 -- Now we have to refactor our entire code base to allow --
 -- Both node & fields options --
@@ -272,6 +286,7 @@ end --}}}
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
 	local cur_line = api.nvim_win_get_cursor(0)[1]
+	local cur_col = api.nvim_win_get_cursor(0)[2]
 
 	local target_index
 	if opts.index then
@@ -286,14 +301,20 @@ function M.target_index_handling(ranges, opts) --{{{
 
 			if opts.next then
 				for i, range in ipairs(ranges) do
-					if range[1] + 1 > cur_line then
+					if range[1] + 1 == cur_line and range[2] > cur_col then
+						target_index = i
+						break
+					elseif range[1] + 1 > cur_line then
 						target_index = i
 						break
 					end
 				end
 			else
 				for i = #ranges, 1, -1 do
-					if ranges[i][1] + 1 < cur_line then
+					if ranges[i][1] + 1 == cur_line and ranges[i][2] < cur_col then
+						target_index = i
+						break
+					elseif ranges[i][1] + 1 < cur_line then
 						target_index = i
 						break
 					end
@@ -348,6 +369,15 @@ function M.jump_to_node_or_field(opts) --{{{
 	return jump_based_on_opts_and_ranges(ranges, opts)
 end --}}}
 
+function M.jump_to_descendants(opts) --{{{
+	local descendants = find_descendants_of_closest_anscestor(opts)
+	local ranges = ranges_from_nodes(descendants)
+
+	ranges = range_processing(ranges, opts)
+
+	return jump_based_on_opts_and_ranges(ranges, opts)
+end --}}}
+
 -- temporary keymaps
 local opts = { noremap = true, silent = true }
 vim.keymap.set("n", "<F24><F24>c", function() --{{{
@@ -368,19 +398,24 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
 vim.keymap.set("n", "<F24><F24>p", function()
-	find_descendants_of_closest_anscestor({
+	M.jump_to_descendants({
 		kind = "field",
 		type = "condition",
 		descendants = {
 			{ kind = "field", type = "left" },
 			{ kind = "field", type = "right" },
 		},
+		next = true,
 	})
 end, { noremap = true, silent = true })
 vim.keymap.set("n", "<F24><F24>o", function()
-	find_ancestor_node_or_field({
-		kind = "node",
-		type = "if_statement",
+	M.jump_to_descendants({
+		kind = "field",
+		type = "condition",
+		descendants = {
+			{ kind = "field", type = "left" },
+			{ kind = "field", type = "right" },
+		},
 	})
 end, { noremap = true, silent = true })
 
