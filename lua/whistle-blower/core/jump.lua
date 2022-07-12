@@ -258,18 +258,12 @@ local function find_descendants_of_node(opts, root) --{{{
 
 	return results
 end --}}}
-local function find_descendants_of_closest_anscestor(opts)
+local function find_descendants_of_closest_anscestor(opts) --{{{
 	local ancestor = find_ancestor_node_or_field(opts)
 	local descendants = find_descendants_of_node(opts, ancestor)
 
-	if descendants then
-		for _, node in ipairs(descendants) do
-			highlight_node(node)
-		end
-	end
-
 	return descendants
-end
+end --}}}
 
 -- There is a fundamental flaw with our current system --
 -- Now we have to refactor our entire code base to allow --
