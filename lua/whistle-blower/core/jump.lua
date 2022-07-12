@@ -36,10 +36,6 @@ local function get_nodes_in_array(root) --{{{
 	return nodes
 end --}}}
 
-local function get_range_of_node(node) --{{{
-	return table.pack(node:range())
-end --}}}
-
 -- marks related functions
 local function delete_all_local_marks() --{{{
 	for i = 97, 122 do -- from 'a' to 'z'
@@ -156,12 +152,14 @@ local function get_fields_ranges(field_name) --{{{
 	local ranges = {}
 
 	for _, node in ipairs(get_fields(field_name)) do
-		local range = get_range_of_node(node)
+		local range = table.pack(node:range())
 		table.insert(ranges, range)
 	end
 
 	return ranges
 end --}}}
+
+-- range related functions
 local function sort_ranges(ranges) --{{{
 	local results = {}
 
@@ -236,6 +234,13 @@ local function find_ancestor_node_or_field(opts) --{{{
 
 	return result
 end --}}}
+local function find_descendants_of_node(opts)
+	--
+end
+
+-- There is a fundamental flaw with our current system --
+-- Now we have to refactor our entire code base to allow --
+-- Both node & fields options --
 
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
