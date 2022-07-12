@@ -1,5 +1,6 @@
 local api = vim.api
-local jump = require("whistle-blower.core.virt-jump")
+local jump = require("whistle-blower.core.jump")
+local virt_jump = require("whistle-blower.core.virt-jump")
 
 -- kemap shorthands
 local keymap = vim.keymap.set
@@ -41,7 +42,7 @@ local test_hydra = Hydra({
 		{
 			"1",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 1,
 				})
@@ -51,7 +52,7 @@ local test_hydra = Hydra({
 		{
 			"2",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 2,
 				})
@@ -61,7 +62,7 @@ local test_hydra = Hydra({
 		{
 			"3",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 3,
 				})
@@ -71,7 +72,7 @@ local test_hydra = Hydra({
 		{
 			"4",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 4,
 				})
@@ -81,7 +82,7 @@ local test_hydra = Hydra({
 		{
 			"5",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 5,
 				})
@@ -91,7 +92,7 @@ local test_hydra = Hydra({
 		{
 			"6",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 6,
 				})
@@ -101,7 +102,7 @@ local test_hydra = Hydra({
 		{
 			"7",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 7,
 				})
@@ -111,7 +112,7 @@ local test_hydra = Hydra({
 		{
 			"8",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 8,
 				})
@@ -121,7 +122,7 @@ local test_hydra = Hydra({
 		{
 			"9",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 9,
 				})
@@ -131,7 +132,7 @@ local test_hydra = Hydra({
 		{
 			"0",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "index",
 					index = 10,
 				})
@@ -142,7 +143,7 @@ local test_hydra = Hydra({
 		{
 			"F",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
 					jump_loop = true,
@@ -153,7 +154,7 @@ local test_hydra = Hydra({
 		{
 			"f",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "node",
 					type = { "function_declaration", "function_definition" },
 					next = true,
@@ -166,7 +167,7 @@ local test_hydra = Hydra({
 		{
 			"V",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "local_declaration" },
 					jump_loop = true,
@@ -178,7 +179,7 @@ local test_hydra = Hydra({
 		{
 			"v",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "local_declaration" },
 					next = true,
@@ -192,7 +193,7 @@ local test_hydra = Hydra({
 		{
 			"O",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "clause" },
 					jump_loop = true,
@@ -203,7 +204,7 @@ local test_hydra = Hydra({
 		{
 			"o",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "clause" },
 					next = true,
@@ -216,7 +217,7 @@ local test_hydra = Hydra({
 		{
 			"E",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "node",
 					type = { "else_statement" },
 					jump_loop = true,
@@ -226,7 +227,7 @@ local test_hydra = Hydra({
 		{
 			"e",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "node",
 					type = { "else_statement" },
 					next = true,
@@ -240,7 +241,7 @@ local test_hydra = Hydra({
 		{
 			"I",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "condition" },
 					jump_loop = true,
@@ -252,7 +253,7 @@ local test_hydra = Hydra({
 		{
 			"i",
 			function()
-				jump.jump_with_virt_text({
+				virt_jump.jump_with_virt_text({
 					kind = "field",
 					type = { "condition" },
 					next = true,
@@ -260,6 +261,34 @@ local test_hydra = Hydra({
 				})
 
 				vim.fn.jobstart("cvlc ~/Sound/sc2_vo_trick_L.wav --gain=0.15 --play-and-exit")
+			end,
+		},
+
+		{
+			"A",
+			function()
+				jump.jump_to_descendants({
+					kind = "field",
+					type = "condition",
+					descendants = {
+						{ kind = "field", type = "left" },
+						{ kind = "field", type = "right" },
+					},
+				})
+			end,
+		},
+		{
+			"a",
+			function()
+				jump.jump_to_descendants({
+					kind = "field",
+					type = "condition",
+					descendants = {
+						{ kind = "field", type = "left" },
+						{ kind = "field", type = "right" },
+					},
+					next = true,
+				})
 			end,
 		},
 

@@ -180,10 +180,9 @@ local function sort_ranges(ranges) --{{{
 	end
 
 	table.sort(results, function(a, b)
-		return a[2] < b[2]
-	end)
-
-	table.sort(results, function(a, b)
+		if a[1] == b[1] then
+			return a[2] < b[2]
+		end
 		return a[1] < b[1]
 	end)
 
