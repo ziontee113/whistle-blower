@@ -129,10 +129,8 @@ local function get_fields(field_names) --{{{
 		field_names = { field_names }
 	end
 
-	local nodes = get_nodes_in_array()
-
 	for _, name in ipairs(field_names) do
-		for _, value in ipairs(nodes) do -- loop through all nodes
+		for _, value in ipairs(get_nodes_in_array()) do -- loop through all nodes
 			local nodes = value:parent():field(name)
 
 			if #nodes > 0 then
@@ -197,7 +195,7 @@ local function highlight_node(node, hl_group) --{{{
 end --}}}
 
 -- ancestor related functions
-local function find_ancestor_node_or_field(opts)
+local function find_ancestor_node_or_field(opts) --{{{
 	local node = ts_utils.get_node_at_cursor(0)
 	local parent = node:parent()
 	local result
@@ -237,7 +235,7 @@ local function find_ancestor_node_or_field(opts)
 	end
 
 	return result
-end
+end --}}}
 
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
