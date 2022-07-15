@@ -46,6 +46,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 1,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -56,6 +57,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 2,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -66,6 +68,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 3,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -76,6 +79,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 4,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -86,6 +90,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 5,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -96,6 +101,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 6,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -106,6 +112,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 7,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -116,6 +123,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 8,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -126,6 +134,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 9,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -136,6 +145,7 @@ local test_hydra = Hydra({
 					kind = "index",
 					index = 10,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/Equipment01.wav --gain=0.2 --play-and-exit")
 			end,
 			{ nowait = true },
 		},
@@ -276,6 +286,7 @@ local test_hydra = Hydra({
 					},
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/all_00156.wav --gain=0.2 --play-and-exit")
 			end,
 		},
 		{
@@ -291,6 +302,7 @@ local test_hydra = Hydra({
 					next = true,
 					jump_loop = true,
 				})
+				vim.fn.jobstart("cvlc ~/Sound/all_00156.wav --gain=0.2 --play-and-exit")
 			end,
 		},
 

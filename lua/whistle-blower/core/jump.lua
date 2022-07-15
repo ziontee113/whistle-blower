@@ -188,6 +188,28 @@ local function sort_ranges(ranges) --{{{
 
 	return results
 end --}}}
+local function filter_duplicate_ranges(ranges)
+	local hash_table = {}
+	local return_ranges = {}
+
+	for _, range in ipairs(ranges) do
+		local continue = true
+
+		for _, value in ipairs(hash_table) do
+			if range[1] == value[1] and range[2] == value[2] then
+				continue = false
+			end
+		end
+
+		if continue == true then
+			table.insert(hash_table, range)
+			table.insert(return_ranges, range)
+		end
+	end
+
+	return return_ranges
+end
+
 local function range_processing(ranges, opts) --{{{
 	ranges = filter_in_viewport(ranges)
 
@@ -198,6 +220,7 @@ local function range_processing(ranges, opts) --{{{
 	end
 
 	ranges = sort_ranges(ranges)
+	ranges = filter_duplicate_ranges(ranges)
 
 	return ranges
 end --}}}
@@ -277,10 +300,6 @@ local function ranges_from_nodes(nodes) --{{{
 
 	return ranges
 end --}}}
-
--- There is a fundamental flaw with our current system --
--- Now we have to refactor our entire code base to allow --
--- Both node & fields options --
 
 -- jump functions
 function M.target_index_handling(ranges, opts) --{{{
@@ -393,27 +412,6 @@ vim.keymap.set("n", "<F24><F24>k", function() --{{{
 	highlight_all_fields("condition")
 	-- highlight_all_fields("local_declaration")
 end, opts) --}}}
-vim.keymap.set("n", "<F24><F24>p", function()
-	M.jump_to_descendants({
-		kind = "field",
-		type = "condition",
-		descendants = {
-			{ kind = "field", type = "left" },
-			{ kind = "field", type = "right" },
-		},
-		next = true,
-	})
-end, { noremap = true, silent = true })
-vim.keymap.set("n", "<F24><F24>o", function()
-	M.jump_to_descendants({
-		kind = "field",
-		type = "condition",
-		descendants = {
-			{ kind = "field", type = "left" },
-			{ kind = "field", type = "right" },
-		},
-	})
-end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "  x", function() --{{{
 	local cmd = [[
